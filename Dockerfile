@@ -2,27 +2,22 @@ FROM debian:stretch-slim
 
 # Setup apt repo
 RUN set -ex; \
-    \
-    apt-get update; \
-    apt-get install -y --no-install-recommends \
-        wget \
+    fetchDeps=" \
+		wget \
         gnupg \
         ca-certificates \
-    ; \
+	"; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends $fetchDeps; \
     \
     wget -qO- https://doozer.io/keys/tvheadend/tvheadend/pgp | apt-key add -; \
     echo "deb http://apt.tvheadend.org/stable stretch main" | tee -a /etc/apt/sources.list.d/tvheadend.list; \
     \
-    apt-get purge -y --auto-remove \
-        wget \
-        gnupg \
-        ca-certificates \
-    ; \
+    apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $fetchDeps; \
     rm -rf /var/lib/apt/lists/*
 
 # Install tvheadend
 RUN set -ex; \
-    \
     apt-get update; \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         tvheadend \
