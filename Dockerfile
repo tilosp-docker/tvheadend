@@ -1,6 +1,5 @@
 FROM debian:stretch-slim
 
-# Setup apt repo
 RUN set -ex; \
     fetchDeps=" \
         gnupg \
