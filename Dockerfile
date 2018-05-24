@@ -3,10 +3,10 @@ FROM debian:stretch-slim
 # Setup apt repo
 RUN set -ex; \
     fetchDeps=" \
-		wget \
+        wget \
         gnupg \
         ca-certificates \
-	"; \
+    "; \
     apt-get update; \
     apt-get install -y --no-install-recommends $fetchDeps; \
     \
