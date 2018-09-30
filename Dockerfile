@@ -1,23 +1,43 @@
-FROM debian:stretch-slim
+FROM buildpack-deps:stretch AS builder
 
 RUN set -ex; \
-    fetchDeps=" \
-        curl \
-        ca-certificates \
-    "; \
     apt-get update; \
-    apt-get install -y --no-install-recommends $fetchDeps; \
-    \
-    curl -fsSL -o tvheadend.deb "https://doozer.io/artifact/m75xabceov/tvheadend_4.2.6-42~g406ba887c~stretch_amd64.deb"; \
-    \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-        ./tvheadend.deb \
+    apt-get install -y \
+        lsb-release \
+        cmake \
+        git \
+        build-essential \
+        pkg-config \
+        gettext \
+        libavahi-client-dev \
+        libssl-dev \
+        zlib1g-dev \
+        wget \
+        bzip2 \
+        git-core \
+        liburiparser-dev \
+        libpcre3-dev \
+        python \
+        dvb-apps \
+        debhelper \
+        ccache \
     ; \
-    rm -f tvheadend.deb; \
-    rm -rf /home/hts/.hts; \
-    \
-    apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $fetchDeps; \
-    rm -rf /var/lib/apt/lists/*
+    git clone --depth=50 --branch=release/4.2 https://github.com/tvheadend/tvheadend.git; \
+    cd tvheadend; \
+    AUTOBUILD_CONFIGURE_EXTRA="--enable-ccache --enable-ffmpeg_static --disable-hdhomerun_client" ./Autobuild.sh -t stretch-amd64; \
+    cd ..; \
+    mv tvheadend_*_amd64.deb tvheadend_amd64.deb
+
+FROM debian:stretch-slim
+
+COPY --from=builder /tvheadend_amd64.deb /
+
+RUN set -ex; \
+    apt-get update; \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        /tvheadend_amd64.deb \
+    ; \
+    rm -rf /home/hts/.hts /var/lib/apt/lists/*
 
 USER hts
 
