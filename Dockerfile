@@ -17,8 +17,9 @@ RUN set -ex; \
         git-core \
         liburiparser-dev \
         libpcre3-dev \
+        libdvbcsa-dev \
         python \
-        dvb-apps \
+        python-requests \
         debhelper \
         ccache \
     ; \
