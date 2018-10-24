@@ -6,6 +6,7 @@ RUN set -ex; \
         dirmngr \
         apt-transport-https \
         ca-certificates \
+        wget \
     "; \
     apt-get update; \
     apt-get install -y --no-install-recommends $fetchDeps; \
