@@ -10,8 +10,8 @@ RUN set -ex; \
     apt-get update; \
     apt-get install -y --no-install-recommends $fetchDeps; \
     \
-    apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys 379CE192D401AB61; \
-    echo "deb https://dl.bintray.com/tvheadend/deb stretch unstable" | tee -a /etc/apt/sources.list.d/tvheadend.list; \
+    wget -qO- https://doozer.io/keys/tvheadend/tvheadend/pgp | apt-key add -; \
+    echo "deb https://apt.tvheadend.org/unstable $(lsb_release -sc) main" | tee -a /etc/apt/sources.list.d/tvheadend.list; \
     \
     apt-get update; \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
