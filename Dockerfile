@@ -12,7 +12,7 @@ RUN set -ex; \
     apt-get install -y --no-install-recommends $fetchDeps; \
     \
     wget -qO- https://doozer.io/keys/tvheadend/tvheadend/pgp | apt-key add -; \
-    echo "deb https://apt.tvheadend.org/unstable stretch main" | tee -a /etc/apt/sources.list.d/tvheadend.list; \
+    echo "deb https://apt.tvheadend.org/stable stretch main" | tee -a /etc/apt/sources.list.d/tvheadend.list; \
     \
     apt-get update; \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
